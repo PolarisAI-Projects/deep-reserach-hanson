@@ -23,7 +23,7 @@ Deep research has broken out as one of the most popular agent applications. This
 1. Clone the repository and activate a virtual environment:
 ```bash
 git clone https://github.com/PolarisAI-Projects/deep-reserach-hanson.git
-cd open_deep_research
+cd deep-reserach-hanson
 uv venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
