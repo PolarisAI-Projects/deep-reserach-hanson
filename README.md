@@ -63,10 +63,10 @@ Ask a question in the `messages` input field and click `Submit`. Select differen
 
 Open Deep Research supports a wide range of LLM providers via the [init_chat_model() API](https://python.langchain.com/docs/how_to/chat_models_universal_init/). It uses LLMs for a few different tasks. See the below model fields in the [configuration.py](https://github.com/langchain-ai/open_deep_research/blob/main/src/open_deep_research/configuration.py) file for more details. This can be accessed via the LangGraph Studio UI. 
 
-- **Summarization** (default: `openai:gpt-4.1-mini`): Summarizes search API results
-- **Research** (default: `openai:gpt-4.1`): Power the search agent
-- **Compression** (default: `openai:gpt-4.1`): Compresses research findings
-- **Final Report Model** (default: `openai:gpt-4.1`): Write the final report
+- **Summarization** (default: `azure_openai:gpt-5`): Summarizes search API results
+- **Research** (default: `azure_openai:gpt-5`): Power the search agent
+- **Compression** (default: `azure_openai:gpt-5`): Compresses research findings
+- **Final Report Model** (default: `azure_openai:gpt-5`): Write the final report
 
 > Note: the selected model will need to support [structured outputs](https://python.langchain.com/docs/integrations/chat/) and [tool calling](https://python.langchain.com/docs/how_to/tool_calling/).
 
