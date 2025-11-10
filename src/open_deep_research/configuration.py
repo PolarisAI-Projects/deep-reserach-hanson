@@ -119,12 +119,12 @@ class Configuration(BaseModel):
     )
     # Model Configuration
     summarization_model: str = Field(
-        default="openai:gpt-4.1-mini",
+        default="azure_openai:gpt-5",
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "openai:gpt-4.1-mini",
-                "description": "Model for summarizing research results from Tavily search results"
+                "default": "azure_openai:gpt-5",
+                "description": "Model for summarizing research results from Tavily search results. Use 'azure_openai:model-name' for Azure OpenAI or 'openai:model-name' for OpenAI."
             }
         }
     )
@@ -151,12 +151,12 @@ class Configuration(BaseModel):
         }
     )
     research_model: str = Field(
-        default="openai:gpt-4.1",
+        default="azure_openai:gpt-5",
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "openai:gpt-4.1",
-                "description": "Model for conducting research. NOTE: Make sure your Researcher Model supports the selected search API."
+                "default": "azure_openai:gpt-5",
+                "description": "Model for conducting research. NOTE: Make sure your Researcher Model supports the selected search API. Use 'azure_openai:model-name' for Azure OpenAI."
             }
         }
     )
@@ -171,12 +171,12 @@ class Configuration(BaseModel):
         }
     )
     compression_model: str = Field(
-        default="openai:gpt-4.1",
+        default="azure_openai:gpt-5",
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "openai:gpt-4.1",
-                "description": "Model for compressing research findings from sub-agents. NOTE: Make sure your Compression Model supports the selected search API."
+                "default": "azure_openai:gpt-5",
+                "description": "Model for compressing research findings from sub-agents. NOTE: Make sure your Compression Model supports the selected search API. Use 'azure_openai:model-name' for Azure OpenAI."
             }
         }
     )
@@ -191,12 +191,12 @@ class Configuration(BaseModel):
         }
     )
     final_report_model: str = Field(
-        default="openai:gpt-4.1",
+        default="azure_openai:gpt-5",
         metadata={
             "x_oap_ui_config": {
                 "type": "text",
-                "default": "openai:gpt-4.1",
-                "description": "Model for writing the final report from all research findings"
+                "default": "azure_openai:gpt-5",
+                "description": "Model for writing the final report from all research findings. Use 'azure_openai:model-name' for Azure OpenAI."
             }
         }
     )

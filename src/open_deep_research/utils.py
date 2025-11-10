@@ -82,12 +82,12 @@ async def tavily_search(
     max_char_to_include = configurable.max_content_length
     
     # Initialize summarization model with retry logic
-    model_api_key = get_api_key_for_model(configurable.summarization_model, config)
+    model_kwargs = get_model_kwargs(configurable.summarization_model, config)
     summarization_model = init_chat_model(
         model=configurable.summarization_model,
         max_tokens=configurable.summarization_model_max_tokens,
-        api_key=model_api_key,
-        tags=["langsmith:nostream"]
+        tags=["langsmith:nostream"],
+        **model_kwargs
     ).with_structured_output(Summary).with_retry(
         stop_after_attempt=configurable.max_structured_output_retries
     )
@@ -889,6 +889,44 @@ def get_config_value(value):
     else:
         return value.value
 
+def get_model_kwargs(model_name: str, config: RunnableConfig) -> dict:
+    """Get model initialization kwargs including API keys and Azure OpenAI settings.
+
+    Args:
+        model_name: The model identifier string (e.g., 'openai:gpt-4', 'azure_openai:gpt-4o')
+        config: Runtime configuration
+
+    Returns:
+        Dictionary of kwargs to pass to init_chat_model
+    """
+    model_name_lower = model_name.lower()
+    kwargs = {}
+
+    # Check if using Azure OpenAI
+    if model_name_lower.startswith("azure_openai:"):
+        # Azure OpenAI configuration
+        azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+        azure_api_key = os.getenv("AZURE_OPENAI_API_KEY")
+        azure_api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview")
+        azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
+
+        if azure_api_key:
+            kwargs["api_key"] = azure_api_key
+        if azure_endpoint:
+            kwargs["azure_endpoint"] = azure_endpoint
+        if azure_api_version:
+            kwargs["api_version"] = azure_api_version
+        if azure_deployment:
+            # Override the model name with the deployment name
+            kwargs["azure_deployment"] = azure_deployment
+    else:
+        # Standard API key retrieval for other providers
+        api_key = get_api_key_for_model(model_name, config)
+        if api_key:
+            kwargs["api_key"] = api_key
+
+    return kwargs
+
 def get_api_key_for_model(model_name: str, config: RunnableConfig):
     """Get API key for a specific model from environment or config."""
     should_get_from_config = os.getenv("GET_API_KEYS_FROM_CONFIG", "false")
@@ -905,7 +943,7 @@ def get_api_key_for_model(model_name: str, config: RunnableConfig):
             return api_keys.get("GOOGLE_API_KEY")
         return None
     else:
-        if model_name.startswith("openai:"): 
+        if model_name.startswith("openai:"):
             return os.getenv("OPENAI_API_KEY")
         elif model_name.startswith("anthropic:"):
             return os.getenv("ANTHROPIC_API_KEY")
